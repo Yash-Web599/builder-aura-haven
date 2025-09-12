@@ -1,5 +1,12 @@
 import { initializeApp, getApps, type FirebaseApp } from "firebase/app";
-import { getAuth, signInAnonymously, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, type User } from "firebase/auth";
+import {
+  getAuth,
+  signInAnonymously,
+  GoogleAuthProvider,
+  signInWithPopup,
+  onAuthStateChanged,
+  type User,
+} from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getDatabase } from "firebase/database";
 import { getFunctions, httpsCallable } from "firebase/functions";
@@ -17,19 +24,20 @@ const config = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY as string | undefined,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN as string | undefined,
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID as string | undefined,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET as string | undefined,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID as string | undefined,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET as
+    | string
+    | undefined,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID as
+    | string
+    | undefined,
   appId: import.meta.env.VITE_FIREBASE_APP_ID as string | undefined,
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID as string | undefined,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID as
+    | string
+    | undefined,
   databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL as string | undefined,
 };
 
-const requiredKeys = [
-  "apiKey",
-  "authDomain",
-  "projectId",
-  "appId",
-];
+const requiredKeys = ["apiKey", "authDomain", "projectId", "appId"];
 
 const hasAllRequired = requiredKeys.every((k) => (config as any)[k]);
 
@@ -88,8 +96,14 @@ export async function signInWithGoogle(): Promise<User | null> {
   }
 }
 
-export async function triggerSosFunction(payload: { lat: number; lng: number; accuracy?: number; timestamp: number }) {
-  if (!firebase.isEnabled || !firebase.functions) return { ok: false, error: "Firebase not configured" };
+export async function triggerSosFunction(payload: {
+  lat: number;
+  lng: number;
+  accuracy?: number;
+  timestamp: number;
+}) {
+  if (!firebase.isEnabled || !firebase.functions)
+    return { ok: false, error: "Firebase not configured" };
   try {
     const callable = httpsCallable(firebase.functions, "sendSosAlert");
     await callable(payload);

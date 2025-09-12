@@ -1,12 +1,38 @@
 import { useEffect, useMemo, useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { firebase, ensureSignedIn } from "@/lib/firebase";
-import { addDoc, collection, onSnapshot, orderBy, query, serverTimestamp } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  onSnapshot,
+  orderBy,
+  query,
+  serverTimestamp,
+} from "firebase/firestore";
 import { addPoints } from "@/lib/points";
-import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import {
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 export default function MoodTracker() {
   const [mood, setMood] = useState<string>("3");
@@ -18,7 +44,12 @@ export default function MoodTracker() {
   }, []);
 
   useEffect(() => {
-    if (!firebase.isEnabled || !firebase.firestore || !firebase.auth?.currentUser) return;
+    if (
+      !firebase.isEnabled ||
+      !firebase.firestore ||
+      !firebase.auth?.currentUser
+    )
+      return;
     const uid = firebase.auth.currentUser.uid;
     const moodsCol = collection(firebase.firestore, "moods");
     const q = query(moodsCol, orderBy("timestamp", "asc"));
@@ -26,7 +57,11 @@ export default function MoodTracker() {
       const data: { mood: number; ts: number }[] = [];
       snap.forEach((doc) => {
         const d = doc.data() as any;
-        if (d.uid === uid && d.mood) data.push({ mood: Number(d.mood), ts: d.timestamp?.toMillis?.() ?? d.timestamp ?? Date.now() });
+        if (d.uid === uid && d.mood)
+          data.push({
+            mood: Number(d.mood),
+            ts: d.timestamp?.toMillis?.() ?? d.timestamp ?? Date.now(),
+          });
       });
       setEntries(data.slice(-30));
     });
@@ -34,7 +69,12 @@ export default function MoodTracker() {
   }, [firebase.isEnabled, firebase.firestore, firebase.auth?.currentUser?.uid]);
 
   async function submit() {
-    if (!firebase.isEnabled || !firebase.firestore || !firebase.auth?.currentUser) return;
+    if (
+      !firebase.isEnabled ||
+      !firebase.firestore ||
+      !firebase.auth?.currentUser
+    )
+      return;
     const uid = firebase.auth.currentUser.uid;
     await addDoc(collection(firebase.firestore, "moods"), {
       uid,
@@ -46,13 +86,22 @@ export default function MoodTracker() {
     setNote("");
   }
 
-  const chartData = useMemo(() => entries.map((e) => ({ x: new Date(e.ts).toLocaleDateString(), y: e.mood })), [entries]);
+  const chartData = useMemo(
+    () =>
+      entries.map((e) => ({
+        x: new Date(e.ts).toLocaleDateString(),
+        y: e.mood,
+      })),
+    [entries],
+  );
 
   return (
     <Card className="h-full flex flex-col">
       <CardHeader>
         <CardTitle>Mood Tracker</CardTitle>
-        <CardDescription>Log your mood daily and watch trends over time</CardDescription>
+        <CardDescription>
+          Log your mood daily and watch trends over time
+        </CardDescription>
       </CardHeader>
       <CardContent className="grid md:grid-cols-2 gap-6">
         <div className="space-y-3">
@@ -74,18 +123,45 @@ export default function MoodTracker() {
             </div>
             <div>
               <div className="text-sm font-medium mb-2">Note (optional)</div>
-              <Textarea value={note} onChange={(e) => setNote(e.target.value)} placeholder="What influenced your mood today?" rows={4} />
+              <Textarea
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                placeholder="What influenced your mood today?"
+                rows={4}
+              />
             </div>
           </div>
-          <Button onClick={submit} className="bg-gradient-to-r from-emerald-500 to-cyan-500">Log Mood</Button>
+          <Button
+            onClick={submit}
+            className="bg-gradient-to-r from-emerald-500 to-cyan-500"
+          >
+            Log Mood
+          </Button>
         </div>
         <div className="h-56 md:h-full">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={chartData} margin={{ left: 8, right: 8, top: 8, bottom: 8 }}>
-              <XAxis dataKey="x" tick={{ fontSize: 12 }} interval={Math.max(0, Math.floor(chartData.length / 6) - 1)} />
-              <YAxis domain={[0, 5]} allowDecimals={false} tick={{ fontSize: 12 }} />
+            <LineChart
+              data={chartData}
+              margin={{ left: 8, right: 8, top: 8, bottom: 8 }}
+            >
+              <XAxis
+                dataKey="x"
+                tick={{ fontSize: 12 }}
+                interval={Math.max(0, Math.floor(chartData.length / 6) - 1)}
+              />
+              <YAxis
+                domain={[0, 5]}
+                allowDecimals={false}
+                tick={{ fontSize: 12 }}
+              />
               <Tooltip />
-              <Line type="monotone" dataKey="y" stroke="#10b981" strokeWidth={2} dot={false} />
+              <Line
+                type="monotone"
+                dataKey="y"
+                stroke="#10b981"
+                strokeWidth={2}
+                dot={false}
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>

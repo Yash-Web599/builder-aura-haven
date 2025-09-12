@@ -10,15 +10,27 @@ export default function Layout({ children }: PropsWithChildren) {
           <a href="/" className="flex items-center gap-2">
             <span className="inline-block h-8 w-8 rounded-lg bg-gradient-to-tr from-emerald-500 to-cyan-500" />
             <div className="leading-tight">
-              <div className="font-extrabold tracking-tight">Smart Campus Hub</div>
-              <div className="text-xs text-muted-foreground">Wellbeing • Safety • Sustainability</div>
+              <div className="font-extrabold tracking-tight">
+                Smart Campus Hub
+              </div>
+              <div className="text-xs text-muted-foreground">
+                Wellbeing • Safety • Sustainability
+              </div>
             </div>
           </a>
           <div className="flex items-center gap-2">
             {!firebase.isEnabled && (
-              <span className="text-xs text-red-600 dark:text-red-400 mr-2">Firebase not configured</span>
+              <span className="text-xs text-red-600 dark:text-red-400 mr-2">
+                Firebase not configured
+              </span>
             )}
-            <Button variant="outline" onClick={() => ensureSignedIn()} className="hidden sm:inline-flex">Guest</Button>
+            <Button
+              variant="outline"
+              onClick={() => ensureSignedIn()}
+              className="hidden sm:inline-flex"
+            >
+              Guest
+            </Button>
             <Button onClick={() => signInWithGoogle()}>Sign in</Button>
           </div>
         </div>

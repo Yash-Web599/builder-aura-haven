@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { firebase, ensureSignedIn, triggerSosFunction } from "@/lib/firebase";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
@@ -18,7 +24,11 @@ export default function SosCard() {
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
         try {
-          if (!firebase.isEnabled || !firebase.firestore || !firebase.auth?.currentUser) {
+          if (
+            !firebase.isEnabled ||
+            !firebase.firestore ||
+            !firebase.auth?.currentUser
+          ) {
             setStatus("Firebase not configured");
             setLoading(false);
             return;
@@ -40,7 +50,11 @@ export default function SosCard() {
             accuracy: pos.coords.accuracy,
             timestamp: Date.now(),
           });
-          setStatus(call.ok ? "SOS sent (SMS/Email triggered)" : "SOS stored. Notify service not configured");
+          setStatus(
+            call.ok
+              ? "SOS sent (SMS/Email triggered)"
+              : "SOS stored. Notify service not configured",
+          );
         } catch (e) {
           setStatus((e as Error).message);
         } finally {
@@ -51,7 +65,7 @@ export default function SosCard() {
         setStatus(err.message);
         setLoading(false);
       },
-      { enableHighAccuracy: true, timeout: 15000 }
+      { enableHighAccuracy: true, timeout: 15000 },
     );
   }
 
@@ -59,11 +73,22 @@ export default function SosCard() {
     <Card className="h-full">
       <CardHeader>
         <CardTitle>Campus Safety</CardTitle>
-        <CardDescription>Share your live location with campus security</CardDescription>
+        <CardDescription>
+          Share your live location with campus security
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
-        <Button size="lg" disabled={loading} onClick={sendSOS} className="bg-red-500 hover:bg-red-600 text-white">{loading ? "Sending..." : "Send SOS"}</Button>
-        {status && <div className="text-sm text-muted-foreground">{status}</div>}
+        <Button
+          size="lg"
+          disabled={loading}
+          onClick={sendSOS}
+          className="bg-red-500 hover:bg-red-600 text-white"
+        >
+          {loading ? "Sending..." : "Send SOS"}
+        </Button>
+        {status && (
+          <div className="text-sm text-muted-foreground">{status}</div>
+        )}
       </CardContent>
     </Card>
   );

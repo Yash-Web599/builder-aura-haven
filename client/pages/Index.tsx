@@ -9,8 +9,14 @@ export default function Index() {
     <div className="space-y-6">
       <section className="rounded-2xl border overflow-hidden">
         <div className="bg-gradient-to-r from-emerald-500 to-cyan-500 p-8 text-white">
-          <h1 className="text-2xl md:text-4xl font-extrabold tracking-tight">Smart Campus Wellbeing & Sustainability Hub</h1>
-          <p className="mt-2 text-white/90 max-w-2xl">Chat with your wellbeing buddy, log your mood, send SOS with live location, and track real-time energy and smart bin usage. Earn points and climb the leaderboard.</p>
+          <h1 className="text-2xl md:text-4xl font-extrabold tracking-tight">
+            Smart Campus Wellbeing & Sustainability Hub
+          </h1>
+          <p className="mt-2 text-white/90 max-w-2xl">
+            Chat with your wellbeing buddy, log your mood, send SOS with live
+            location, and track real-time energy and smart bin usage. Earn
+            points and climb the leaderboard.
+          </p>
         </div>
         <div className="p-4 sm:p-6">
           <SosCard />
